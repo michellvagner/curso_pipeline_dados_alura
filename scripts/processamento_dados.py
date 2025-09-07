@@ -4,21 +4,21 @@ import csv
 class Dados:
 
     def __init__(self, path, tipo_dados):
-        self.path = path 
-        self.tipo_dados = tipo_dados
-        self.dados = self.leitura_dados()
-        self.nome_colunas = self.identificar_colunas()
-        self.qtd_linhas = self.tamanho_arquivo()
+        self.__path = path 
+        self.__tipo_dados = tipo_dados
+        self.dados = self.__leitura_dados()
+        self.nome_colunas = self.__identificar_colunas()
+        self.qtd_linhas = self.__tamanho_arquivo()
 
-    def leitura_json(self):
-        with open(self.path, 'r') as file:
+    def __leitura_json(self):
+        with open(self.__path, 'r') as file:
             dados_json = json.load(file)
 
         return dados_json
 
-    def leitura_csv(self):
+    def __leitura_csv(self):
         dados_csv = []
-        with open (self.path, 'r') as file:
+        with open (self.__path, 'r') as file:
             spamreader = csv.DictReader(file, delimiter=',')
             
             for linha in spamreader:
@@ -26,30 +26,30 @@ class Dados:
 
         return dados_csv
 
-    def leitura_dados(self):
+    def __leitura_dados(self):
 
-        if self.tipo_dados == 'csv':
-            dados = self.leitura_csv()
+        if self.__tipo_dados == 'csv':
+            dados = self.__leitura_csv()
             
-        elif self.tipo_dados == 'json':
-            dados = self.leitura_json()
+        elif self.__tipo_dados == 'json':
+            dados = self.__leitura_json()
 
-        elif self.tipo_dados == 'list':
-            dados = self.path
-            self.path = 'lista em memoria'
+        elif self.__tipo_dados == 'list':
+            dados = self.__path
+            self.__path = 'lista em memoria'
 
         return dados
     
-    def identificar_colunas(self):
+    def __identificar_colunas(self):
         return list(self.dados[-1].keys())
     
     def renomear_colunas(self, key_mapping):
         new_dados_csv = [{key_mapping.get(old_key): value for old_key, value in old_dict.items()} for old_dict in self.dados ]
         
         self.dados = new_dados_csv
-        self.nome_colunas = self.identificar_colunas()
+        self.nome_colunas = self.__identificar_colunas()
         
-    def tamanho_arquivo(self):
+    def __tamanho_arquivo(self):
         return len(self.dados)
     
     def fusao(dadosA, dadosB):
@@ -58,7 +58,7 @@ class Dados:
         combined_list.extend(dadosB.dados)
         return Dados(combined_list, 'list')
     
-    def transformando_dados_tabela(self):
+    def __transformando_dados_tabela(self):
     
         dados_combinados_tabela = [self.nome_colunas]
 
@@ -72,7 +72,7 @@ class Dados:
     
     def salvando_dados(self, caminho):
 
-        dados_combinados_tabela = self.transformando_dados_tabela()
+        dados_combinados_tabela = self.__transformando_dados_tabela()
 
         with open(caminho, 'w') as file:
             writer = csv.writer(file)
