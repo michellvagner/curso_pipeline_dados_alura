@@ -1,35 +1,36 @@
 # %%
 import json
 import csv
+from processamento_dados import Dados
 
 #%%
 
-def leitura_json(path_json):
-    with open(path_json, 'r') as file:
-        dados_json = json.load(file)
+# def leitura_json(path_json):
+#     with open(path_json, 'r') as file:
+#         dados_json = json.load(file)
 
-    return dados_json
+#     return dados_json
 
-def leitura_csv(path_csv):
-    dados_csv = []
-    with open (path_csv, 'r') as file:
-        spamreader = csv.DictReader(file, delimiter=',')
+# def leitura_csv(path_csv):
+#     dados_csv = []
+#     with open (path_csv, 'r') as file:
+#         spamreader = csv.DictReader(file, delimiter=',')
         
-        for linha in spamreader:
-            dados_csv.append(linha)
+#         for linha in spamreader:
+#             dados_csv.append(linha)
 
-    return dados_csv
+#     return dados_csv
 
-def leitura_dados(path, tipo_arquivo):
+# def leitura_dados(path, tipo_arquivo):
 
-    if tipo_arquivo == 'csv':
-        dados = leitura_csv(path)
+#     if tipo_arquivo == 'csv':
+#         dados = leitura_csv(path)
         
 
-    elif tipo_arquivo == 'json':
-        dados = leitura_json(path)
+#     elif tipo_arquivo == 'json':
+#         dados = leitura_json(path)
 
-    return dados
+#     return dados
 
 def identificar_colunas(dados):
     return list(dados[0].keys())
@@ -68,49 +69,55 @@ def salvando_dados(dados, caminho):
 path_json = '../data_raw/dados_empresaA.json'
 path_csv = '../data_raw/dados_empresaB.csv'
 
-## Iniciando leitura
+dados_empresaA = Dados(path_json, 'json')
+print(dados_empresaA.dados)
 
-dados_json = leitura_dados(path_json, 'json')
-dados_csv = leitura_dados(path_csv, 'csv')
-tamanho_dados_json = tamanho_arquivo(dados_json)
-tamanho_dados_csv = tamanho_arquivo(dados_csv)
+dados_empresaB = Dados(path_csv, 'csv')
+print(dados_empresaB.dados)
 
-nome_colunas_json = identificar_colunas(dados_json)
-nome_colunas_csv = identificar_colunas(dados_csv)
+# ## Iniciando leitura
 
-# %%
+# dados_json = leitura_dados(path_json, 'json')
+# dados_csv = leitura_dados(path_csv, 'csv')
+# tamanho_dados_json = tamanho_arquivo(dados_json)
+# tamanho_dados_csv = tamanho_arquivo(dados_csv)
 
-#Transformação dados
+# nome_colunas_json = identificar_colunas(dados_json)
+# nome_colunas_csv = identificar_colunas(dados_csv)
 
-key_mapping = {'Nome do Item': 'Nome do Produto', 
-               'Classificação do Produto': 'Categoria do Produto',
-               'Valor em Reais (R$)': 'Preço do Produto (R$)',
-               'Quantidade em Estoque': 'Quantidade em Estoque',
-               'Nome da Loja': 'Filial',
-               'Data da Venda': 'Data da Venda'
-               }
+# # %%
 
-dados_csv = renomear_colunas(dados_csv, key_mapping)
-nome_colunas_csv = identificar_colunas(dados_csv)
-print(f"Tamanho arquivos json: {tamanho_dados_json}")
-print(f"Tamanho arquivos csv: {tamanho_dados_csv}")
+# #Transformação dados
 
-dados_fusao = fusao(dados_csv, dados_json)
-nome_colunas_fusao = identificar_colunas(dados_fusao)
-tamanho_dados_fusao = tamanho_arquivo(dados_fusao)
+# key_mapping = {'Nome do Item': 'Nome do Produto', 
+#                'Classificação do Produto': 'Categoria do Produto',
+#                'Valor em Reais (R$)': 'Preço do Produto (R$)',
+#                'Quantidade em Estoque': 'Quantidade em Estoque',
+#                'Nome da Loja': 'Filial',
+#                'Data da Venda': 'Data da Venda'
+#                }
 
-print(f"Tamanho arquivos fusao: {tamanho_dados_fusao}")
+# dados_csv = renomear_colunas(dados_csv, key_mapping)
+# nome_colunas_csv = identificar_colunas(dados_csv)
+# print(f"Tamanho arquivos json: {tamanho_dados_json}")
+# print(f"Tamanho arquivos csv: {tamanho_dados_csv}")
 
-# %%
+# dados_fusao = fusao(dados_csv, dados_json)
+# nome_colunas_fusao = identificar_colunas(dados_fusao)
+# tamanho_dados_fusao = tamanho_arquivo(dados_fusao)
 
-#Salvando dados
+# print(f"Tamanho arquivos fusao: {tamanho_dados_fusao}")
 
-dados_fusao_tabela = transformando_dados_tabela(dados_fusao, nome_colunas_fusao)
+# # %%
 
-path_dados_combinados = '../data_processed/dados_combinados.csv'
+# #Salvando dados
 
-salvando_dados(dados_fusao_tabela, path_dados_combinados)
+# dados_fusao_tabela = transformando_dados_tabela(dados_fusao, nome_colunas_fusao)
 
-print(f'Arquivo salvo em: {path_dados_combinados}')
+# path_dados_combinados = '../data_processed/dados_combinados.csv'
+
+# salvando_dados(dados_fusao_tabela, path_dados_combinados)
+
+# print(f'Arquivo salvo em: {path_dados_combinados}')
 
 # %%
